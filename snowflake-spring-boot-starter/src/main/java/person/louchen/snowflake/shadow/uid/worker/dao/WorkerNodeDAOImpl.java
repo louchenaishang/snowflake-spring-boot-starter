@@ -84,7 +84,7 @@ public class WorkerNodeDAOImpl implements WorkerNodeDAO {
                 ps.setString(1, workerNodeEntity.getHostName());
                 ps.setString(2, workerNodeEntity.getPort());
                 ps.setInt(3, workerNodeEntity.getType());
-                ps.setTimestamp(4, new java.sql.Timestamp(workerNodeEntity.getLaunchDate().getTime()));
+                ps.setDate(4, new java.sql.Date(workerNodeEntity.getLaunchDate().getTime()));
                 ps.setTimestamp(5, new java.sql.Timestamp(new Date().getTime()));
                 ps.setTimestamp(6, new java.sql.Timestamp(new Date().getTime()));
 
@@ -98,7 +98,7 @@ public class WorkerNodeDAOImpl implements WorkerNodeDAO {
 
     private void update(WorkerNodeEntity workerNodeEntity){
         String sqlStr = "update WORKER_NODE set LAUNCH_DATE = ?,MODIFIED = ?  where id = ?";
-        jdbcTemplate.update(sqlStr, new Object[]{new java.sql.Timestamp(workerNodeEntity.getLaunchDate().getTime()),new java.sql.Timestamp(new Date().getTime()),workerNodeEntity.getId()});
+        jdbcTemplate.update(sqlStr, new Object[]{new java.sql.Date(workerNodeEntity.getLaunchDate().getTime()),new java.sql.Timestamp(new Date().getTime()),workerNodeEntity.getId()});
     }
 
 }
