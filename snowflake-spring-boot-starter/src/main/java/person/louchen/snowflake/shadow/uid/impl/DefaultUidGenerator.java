@@ -27,7 +27,7 @@ import person.louchen.snowflake.shadow.uid.BitsAllocator;
 import person.louchen.snowflake.shadow.uid.UidGenerator;
 import person.louchen.snowflake.shadow.uid.exception.UidGenerateException;
 import person.louchen.snowflake.shadow.uid.utils.DateUtils;
-import person.louchen.snowflake.shadow.uid.worker.WorkerIdAssigner;
+import person.louchen.snowflake.shadow.uid.worker.WorkerIdAssignerService;
 
 /**
  * Represents an implementation of {@link UidGenerator}
@@ -79,7 +79,7 @@ public class DefaultUidGenerator implements UidGenerator, InitializingBean {
     protected long lastSecond = -1L;
 
     /** Spring property */
-    protected WorkerIdAssigner workerIdAssigner;
+    protected WorkerIdAssignerService workerIdAssignerService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -87,7 +87,7 @@ public class DefaultUidGenerator implements UidGenerator, InitializingBean {
         bitsAllocator = new BitsAllocator(timeBits, workerBits, seqBits);
 
         // initialize worker id
-        workerId = workerIdAssigner.assignWorkerId();
+        workerId = workerIdAssignerService.assignWorkerId();
         if (workerId > bitsAllocator.getMaxWorkerId()) {
             throw new RuntimeException("Worker id " + workerId + " exceeds the max " + bitsAllocator.getMaxWorkerId());
         }
@@ -187,8 +187,8 @@ public class DefaultUidGenerator implements UidGenerator, InitializingBean {
     /**
      * Setters for spring property
      */
-    public void setWorkerIdAssigner(WorkerIdAssigner workerIdAssigner) {
-        this.workerIdAssigner = workerIdAssigner;
+    public void setWorkerIdAssignerService(WorkerIdAssignerService workerIdAssignerService) {
+        this.workerIdAssignerService = workerIdAssignerService;
     }
 
     public void setTimeBits(int timeBits) {

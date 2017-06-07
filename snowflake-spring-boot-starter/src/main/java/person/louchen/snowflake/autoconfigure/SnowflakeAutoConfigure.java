@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import person.louchen.snowflake.SnowflakeServiceImpl;
 import person.louchen.snowflake.shadow.uid.impl.DefaultUidGenerator;
-import person.louchen.snowflake.shadow.uid.worker.DisposableWorkerIdAssigner;
+import person.louchen.snowflake.shadow.uid.worker.DisposableWorkerIdAssignerService;
 import person.louchen.snowflake.shadow.uid.worker.dao.WorkerNodeDAO;
 import person.louchen.snowflake.shadow.uid.worker.dao.WorkerNodeDAOImpl;
 
@@ -36,7 +36,7 @@ public class SnowflakeAutoConfigure {
     @ConditionalOnProperty(prefix = "snowflake", value = "enabled", havingValue = "true")
     DefaultUidGenerator defaultUidGenerator() {
         DefaultUidGenerator defaultUidGenerator = new DefaultUidGenerator();
-        defaultUidGenerator.setWorkerIdAssigner(disposableWorkerIdAssigner());
+        defaultUidGenerator.setWorkerIdAssignerService(disposableWorkerIdAssignerService());
         defaultUidGenerator.setTimeBits(properties.getTimeBits() == null ? 29 : properties.getTimeBits());
         defaultUidGenerator.setWorkerBits(properties.getWorkerBits() == null ? 21 : properties.getWorkerBits());
         defaultUidGenerator.setSeqBits(properties.getSeqBits() == null ? 13 : properties.getSeqBits());
@@ -48,10 +48,10 @@ public class SnowflakeAutoConfigure {
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnProperty(prefix = "snowflake", value = "enabled", havingValue = "true")
-    DisposableWorkerIdAssigner disposableWorkerIdAssigner() {
-        DisposableWorkerIdAssigner disposableWorkerIdAssigner = new DisposableWorkerIdAssigner();
+    DisposableWorkerIdAssignerService disposableWorkerIdAssignerService() {
+        DisposableWorkerIdAssignerService disposableWorkerIdAssignerService = new DisposableWorkerIdAssignerService();
 
-        return disposableWorkerIdAssigner;
+        return disposableWorkerIdAssignerService;
     }
 
     @Bean

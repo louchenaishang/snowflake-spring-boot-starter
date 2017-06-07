@@ -20,7 +20,7 @@ package person.louchen.snowflake.shadow.uid.worker;
  * 
  * @author yutianbao
  */
-public interface WorkerIdAssigner {
+public interface WorkerIdAssignerService {
 
     /**
      * Assign worker id for {@link person.louchen.snowflake.shadow.uid.impl.DefaultUidGenerator}

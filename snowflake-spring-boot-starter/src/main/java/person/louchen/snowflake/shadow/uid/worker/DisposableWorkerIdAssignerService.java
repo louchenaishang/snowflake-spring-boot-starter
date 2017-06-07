@@ -26,13 +26,13 @@ import person.louchen.snowflake.shadow.uid.worker.dao.WorkerNodeDAO;
 import person.louchen.snowflake.shadow.uid.worker.entity.WorkerNodeEntity;
 
 /**
- * Represents an implementation of {@link WorkerIdAssigner}, 
+ * Represents an implementation of {@link WorkerIdAssignerService},
  * the worker id will be discarded after assigned to the UidGenerator
  * 
  * @author yutianbao
  */
-public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DisposableWorkerIdAssigner.class);
+public class DisposableWorkerIdAssignerService implements WorkerIdAssignerService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DisposableWorkerIdAssignerService.class);
 
     @Autowired
     private WorkerNodeDAO workerNodeDAO;
