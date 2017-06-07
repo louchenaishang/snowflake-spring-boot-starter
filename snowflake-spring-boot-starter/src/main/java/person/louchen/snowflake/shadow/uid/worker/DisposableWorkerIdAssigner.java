@@ -19,12 +19,11 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import person.louchen.snowflake.shadow.uid.utils.DockerUtils;
 import person.louchen.snowflake.shadow.uid.utils.NetUtils;
 import person.louchen.snowflake.shadow.uid.worker.dao.WorkerNodeDAO;
 import person.louchen.snowflake.shadow.uid.worker.entity.WorkerNodeEntity;
-
-import javax.annotation.Resource;
 
 /**
  * Represents an implementation of {@link WorkerIdAssigner}, 
@@ -35,9 +34,11 @@ import javax.annotation.Resource;
 public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
     private static final Logger LOGGER = LoggerFactory.getLogger(DisposableWorkerIdAssigner.class);
 
-    //@Resource(name = "workerNodeDAO")
     @Autowired
     private WorkerNodeDAO workerNodeDAO;
+
+    @Value("${server.port:0}")
+    private int port;
 
     /**
      * Assign worker id base on database.<p>
@@ -70,7 +71,11 @@ public class DisposableWorkerIdAssigner implements WorkerIdAssigner {
         } else {
             workerNodeEntity.setType(WorkerNodeType.ACTUAL.value());
             workerNodeEntity.setHostName(NetUtils.getLocalAddress());
-            workerNodeEntity.setPort(System.currentTimeMillis() + "-" + RandomUtils.nextInt(100000));
+            if(port==0){
+                workerNodeEntity.setPort(System.currentTimeMillis() + "-" + RandomUtils.nextInt(100000));
+            }else{
+                workerNodeEntity.setPort(port+"");
+            }
         }
 
         return workerNodeEntity;

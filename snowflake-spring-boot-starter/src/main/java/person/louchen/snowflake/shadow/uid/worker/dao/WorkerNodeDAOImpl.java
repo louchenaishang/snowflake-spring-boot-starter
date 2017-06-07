@@ -37,7 +37,7 @@ public class WorkerNodeDAOImpl implements WorkerNodeDAO {
                 "a.TYPE,\n" +
                 "a.LAUNCH_DATE,\n" +
                 "a.MODIFIED,\n" +
-                "a.CREATED,\n" +
+                "a.CREATED\n" +
                 "from WORKER_NODE a\n" +
                 "where a.HOST_NAME = ? and a.PORT = ?";
 
@@ -63,6 +63,17 @@ public class WorkerNodeDAOImpl implements WorkerNodeDAO {
 
     @Override
     public void addWorkerNode(WorkerNodeEntity workerNodeEntity) {
+        WorkerNodeEntity old = getWorkerNodeByHostPort(workerNodeEntity.getHostName(), workerNodeEntity.getPort());
+        if(old==null){
+            insert(workerNodeEntity);
+        }else{
+            workerNodeEntity.setId(old.getId());
+            update(workerNodeEntity);
+        }
+
+    }
+
+    private void insert(WorkerNodeEntity workerNodeEntity){
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sqlStr = "insert into WORKER_NODE(HOST_NAME, PORT, TYPE, LAUNCH_DATE, MODIFIED, CREATED) values(?, ?, ?, ?, ?, ?)";
 
@@ -83,7 +94,11 @@ public class WorkerNodeDAOImpl implements WorkerNodeDAO {
 
         Long generatedId = keyHolder.getKey().longValue();
         workerNodeEntity.setId(generatedId);
+    }
 
+    private void update(WorkerNodeEntity workerNodeEntity){
+        String sqlStr = "update WORKER_NODE set LAUNCH_DATE = ?,MODIFIED = ?  where id = ?";
+        jdbcTemplate.update(sqlStr, new Object[]{new java.sql.Timestamp(workerNodeEntity.getLaunchDate().getTime()),new java.sql.Timestamp(new Date().getTime()),workerNodeEntity.getId()});
     }
 
 }
